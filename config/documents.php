@@ -6,23 +6,32 @@ return [
 
     'path' => 'uploads/documents',
 
+    'admin' => [
+        'views' => [
+            'index' => 'document::index',
+            'create' => 'document::upload',
+            'show' => 'document::show',
+            'edit' => 'document::edit',
+        ],
+    ],
+
+    'web' => [
+        'views' => [
+            'create' => 'document::add_email',
+            'download' => null //'Documents.Views.download',
+        ]
+    ],
+
     'routes' => [
         'admin' => [
             'prefix' => 'administrator/documents',
-            'middleware' => ['auth'],
+            'middleware' => [],
             'name' => 'administrator.',
             'index' => '/',
             'create' => 'create',
             'store' => 'store',
             'show' => 'show/{documents}',
             'update' => 'update/{documents}',
-
-            'views' => [
-                'index' => 'document::index',
-                'create' => 'document::upload',
-                'show' => 'document::show',
-                'edit' => 'document::edit',
-            ],
         ],
         'web' => [
             'prefix' => 'documents',
@@ -31,14 +40,9 @@ return [
             'create' => 'create/{document}',
             'store' => 'store/{document}',
             'download' => 'download/{documents}',
-
-            'views' => [
-                'create' => 'document::add_email',
-                'download' => null //'Documents.Views.download',
-            ]
         ],
     ],
-    
+
     // 'table' => 'documents',
 
     // 'migration_path' => 'database/migrations',
