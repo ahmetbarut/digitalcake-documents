@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Extensions\Documents\Controllers;
+namespace Digitalcake\Documents\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
