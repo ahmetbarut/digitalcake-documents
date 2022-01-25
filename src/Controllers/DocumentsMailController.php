@@ -16,11 +16,18 @@ class DocumentsMailController
         $this->mailModel = config('documents.mail_model');
     }
 
+    public function index()
+    {
+        return view(config('documents.web.views.index'))->with([
+            'documents' => $this->document::all()
+        ]);
+    }
+    
     public function create($document)
     {
         $document = $this->document::findOrFail($document);
 
-        return view('Documents.Views.add_email')->with([
+        return view(config('documents.web.views.create'))->with([
             'store_route' => route(config('documents.routes.web.name') .  'store', $document->id),
             'document' => $document
         ]);

@@ -18,7 +18,8 @@ return [
     'web' => [
         'views' => [
             'create' => 'documents::add_email',
-            'download' => null //'Documents.Views.download',
+            'download' => null, //'Documents.Views.download',
+            'index' => 'documents::index',
         ]
     ],
 
