@@ -1,6 +1,4 @@
 <?php
-
-use App\Extensions\Documents\Controllers\DocumentsController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
