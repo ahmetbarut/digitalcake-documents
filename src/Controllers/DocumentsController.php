@@ -17,7 +17,7 @@ class DocumentsController
 
     public function index()
     {
-        return view('Documents.Views.index')->with([
+        return view(config('documents.admin.views.index'))->with([
             'documents' => $this->model::all()
         ]);
     }
@@ -94,5 +94,10 @@ class DocumentsController
         $document->name = $name;
         $document->public = $request->is_public ? true : false;
         $document->save();
+
+        return back()->with([
+            'message' => 'Document updated successfully',
+        ]);
+        
     }
 }
