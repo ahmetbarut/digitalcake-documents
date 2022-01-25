@@ -12,7 +12,7 @@ class DocumentSendMail extends Mailable
     use Queueable, SerializesModels;
 
     public $data;
-    public $language;
+    public $url;
     
     /**
      * Create a new message instance.
@@ -22,6 +22,7 @@ class DocumentSendMail extends Mailable
     public function __construct($data)
     {
         $this->data = $data;
+        $this->url = route(config('documents.routes.web.name') . 'download' , $data->slug);
     }
 
     /**

@@ -8,16 +8,16 @@ return [
 
     'admin' => [
         'views' => [
-            'index' => 'document::index',
-            'create' => 'document::upload',
-            'show' => 'document::show',
-            'edit' => 'document::edit',
+            'index' => 'documents::index',
+            'create' => 'documents::upload',
+            'show' => 'documents::show',
+            'edit' => 'documents::edit',
         ],
     ],
 
     'web' => [
         'views' => [
-            'create' => 'document::add_email',
+            'create' => 'documents::add_email',
             'download' => null //'Documents.Views.download',
         ]
     ],

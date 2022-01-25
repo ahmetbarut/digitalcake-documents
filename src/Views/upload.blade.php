@@ -1,7 +1,3 @@
-@extends('administrator.layouts.default')
-
-@section('content')
-
     <div class="main-container" id="page-news-add">
 
         <div class="main-content">
@@ -11,7 +7,7 @@
                     <p class="lead"> {{ trans('news::admin.news_add_page_description') }}</p>
                 </div>
 
-                @if ($errors->count())
+                @if (isset($errors) && $errors->count())
                     <div class="alert alert-warning">{{ $errors->first() }}</div>
                 @endif
 
