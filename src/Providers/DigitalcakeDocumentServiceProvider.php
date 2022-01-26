@@ -13,16 +13,6 @@ class DigitalcakeDocumentServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
-    }
-
-    /**
-     * Bootstrap services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
         $this->publishes([
             __DIR__ . '/../../config/documents.php' => config_path('documents.php'),
         ], 'documents');
@@ -36,9 +26,8 @@ class DigitalcakeDocumentServiceProvider extends ServiceProvider
 
         if (is_dir(app_path('Extensions')) && !is_dir(app_path('Extensions/Documents'))) {
             mkdir(app_path('Extensions/Documents'));
-            $this->publishes([
-                __DIR__ . '/../../navigation.php' => app_path('Extensions/Documents/navigation.php'),
-            ], 'documents');
+            copy(__DIR__ . '/../../navigation.php', app_path('Extensions/Documents/navigation.php'));
+
             $this->publishes([
                 __DIR__ . '/../../routes.web.php' => app_path('Extensions/Documents/routes.web.php'),
             ], 'documents');
@@ -56,5 +45,14 @@ class DigitalcakeDocumentServiceProvider extends ServiceProvider
             $this->loadRoutesFrom(__DIR__ . '/../../routes.web.php');
             $this->loadTranslationsFrom(__DIR__ . '/../../Lang', 'documents');
         }
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
     }
 }

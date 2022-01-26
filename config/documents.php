@@ -7,8 +7,10 @@ return [
     // E-posta gönderilirken kullanılacak model.
     'mail_model' => Digitalcake\Documents\Models\DocumentsMail::class,
 
+    // Belgelerin yükleneceği dizin
     'path' => 'uploads/documents',
 
+    // admin tarafındaki sayfalarin şablonu
     'admin' => [
         'views' => [
             'index' => 'package.documents.admin.index',
@@ -18,6 +20,7 @@ return [
         ],
     ],
 
+    // Kullanıcı tarafındaki sayfaların şablonu
     'web' => [
         'views' => [
             'create' => 'documents::add_email',
@@ -26,6 +29,9 @@ return [
         ]
     ],
 
+    /**
+     * Hem web hem admin rotaları
+     */
     'routes' => [
         'admin' => [
             'prefix' => 'administrator/documents',
@@ -50,17 +56,12 @@ return [
         ],
     ],
 
-    // 'table' => 'documents',
-
-    // 'migration_path' => 'database/migrations',
-
+    // e-posta modelinde kullanılacak alanlar
     'email_store_fields' => [
         'email'
     ],
 
-    'file_store_fields' => [
-        'file', 'title'
-    ],
+    // e-posta da gönderilecek şablon
     'mail' => [
         'template' => 'documents::mail',
     ],
