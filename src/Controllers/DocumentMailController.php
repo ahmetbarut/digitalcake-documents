@@ -5,9 +5,16 @@ namespace Digitalcake\Documents\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-class DocumentsMailController
+class DocumentMailController
 {
+    /**
+     * @var \Digitalcake\Documents\Models\Documents
+     */
     private $document;
+    
+    /**
+     * @var \Digitalcake\Documents\Models\DocumentsMail
+     */
     private $mailModel;
 
     public function __construct()
@@ -16,6 +23,10 @@ class DocumentsMailController
         $this->mailModel = config('documents.mail_model');
     }
 
+    /**
+     * Dokümanların listelendiği sayfayı döndürür.
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         return view(config('documents.web.views.index'))->with([
@@ -23,6 +34,11 @@ class DocumentsMailController
         ]);
     }
     
+    /**
+     * Kullanıcı bir dosya indirmek veya e-posta adresini girmek için görünen sayfa.
+     * @param int $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create($document)
     {
         $document = $this->document::findOrFail($document);
@@ -33,6 +49,12 @@ class DocumentsMailController
         ]);
     }
 
+    /**
+     * Kullanıcı bir dosya indirmek veya e-posta adresini girmek için görünen sayfa.
+     * @param Request $request
+     * @param int $document
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request, $document)
     {
         $document = $this->document::findOrFail($document);
@@ -46,6 +68,8 @@ class DocumentsMailController
         ]));
 
         Mail::to($fileds['email'])->send(new \Digitalcake\Documents\Mail\DocumentSendMail($document));
+
+        return redirect()->route(config('documents.routes.web.name') . 'index')->with('success', 'Email enviado com sucesso');
     }
 
     public function download($document)

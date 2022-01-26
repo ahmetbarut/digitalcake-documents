@@ -8,10 +8,10 @@ return [
 
     'admin' => [
         'views' => [
-            'index' => 'documents::index',
-            'create' => 'documents::upload',
+            'index' => 'package.documents.admin.index',
+            'create' => 'package.documents.admin.add',
             'show' => 'documents::show',
-            'edit' => 'documents::edit',
+            'edit' => 'package.documents.admin.edit',
         ],
     ],
 
@@ -19,20 +19,23 @@ return [
         'views' => [
             'create' => 'documents::add_email',
             'download' => null, //'Documents.Views.download',
-            'index' => 'documents::index',
+            'index' => 'package.documents.web.index',
         ]
     ],
 
     'routes' => [
         'admin' => [
             'prefix' => 'administrator/documents',
-            'middleware' => [],
-            'name' => 'administrator.',
+            'middleware' => 'auth.teknoza:administrator',
+            'name' => 'administrator.documents.',
+
             'index' => '/',
             'create' => 'create',
             'store' => 'store',
             'show' => 'show/{documents}',
+            'edit' => 'edit/{documents}',
             'update' => 'update/{documents}',
+            'destroy' => 'destroy/{documents}',
         ],
         'web' => [
             'prefix' => 'documents',
@@ -52,7 +55,10 @@ return [
         'email'
     ],
 
+    'file_store_fields' => [
+        'file', 'title'
+    ],
     'mail' => [
-        'template' => 'Documents.Views.mail',
+        'template' => 'documents::mail',
     ],
 ];
