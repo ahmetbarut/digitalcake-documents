@@ -3,7 +3,6 @@
     "description": "Belge yönetimi",
     "type": "package",
     "license": "MIT",
-    "version": "1.0.0",
     "autoload": {
         "psr-4": {
             "Digitalcake\\Documents\\": "src/"
