@@ -1,7 +1,10 @@
 <?php
 
 return [
+    // Belgelerin depolanacağı model.
     'model' => Digitalcake\Documents\Models\Documents::class,
+
+    // E-posta gönderilirken kullanılacak model.
     'mail_model' => Digitalcake\Documents\Models\DocumentsMail::class,
 
     'path' => 'uploads/documents',
