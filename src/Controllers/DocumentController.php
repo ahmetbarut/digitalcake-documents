@@ -65,12 +65,14 @@ class DocumentController
                 'name' => 'required|max:255',
                 'description' => 'required|max:255',
                 'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'public' => 'required|boolean',
+                'is_public' => 'required|boolean',
+                'documents' => 'required'
             ]
         );
 
         $model = new $this->model;
-        $image = $request->file('image')->move(public_path(config('documents.storage.path')), Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension());
+        $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
+        $request->file('image')->move(public_path(config('documents.storage.img_path')), $image);
         $file = $request->file('documents');
 
         $name = $request->name ? Str::slug($request->name) . '.' . $file->getClientOriginalExtension() : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
@@ -122,6 +124,7 @@ class DocumentController
         if ($file) {
             try {
                 unlink(public_path(config('documents.path') . '/' . $document->name));
+                unlink(public_path(config('documents.img_path') . '/' . $document->image));
             } catch (ErrorException $e) {
                 Log::alert($e->getMessage());
             }
@@ -129,6 +132,13 @@ class DocumentController
             $document->path = $file->move(config('documents.path'), $name . '.' . $file->getClientOriginalExtension());
         }
 
+        if ($request->has('image')) {
+            $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(public_path(config('documents.storage.img_path')), $image);
+        }
+
+        $document->image = $request->has('image') ? $image : $document->image;
+        $document->description = $request->description;
         $document->name = $name;
         $document->public = $request->is_public == 1 ? true : false;
         $document->save();
@@ -148,6 +158,7 @@ class DocumentController
         $document = $this->model::findOrFail($document);
         try {
             unlink(public_path(config('documents.path') . '/' . $document->name));
+            unlink(public_path(config('documents.img_path') . '/' . $document->image));
         } catch (ErrorException $e) {
             Log::alert($e->getMessage());
         }
