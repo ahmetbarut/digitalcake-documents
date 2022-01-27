@@ -70,13 +70,14 @@ class DocumentController
         );
 
         $model = new $this->model;
-
+        $image = $request->file('image')->move(public_path(config('documents.storage.path')), Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension());
         $file = $request->file('documents');
 
         $name = $request->name ? Str::slug($request->name) . '.' . $file->getClientOriginalExtension() : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
 
         $model->path = $file->move(config('documents.path'), $name);
         $model->name = $name;
+        $model->image = $image;
         $model->slug = Str::uuid();
         $model->description = $request->description;
         $model->public = $request->is_public == 1 ? true : false;
