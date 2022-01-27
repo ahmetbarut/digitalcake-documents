@@ -49,6 +49,15 @@ class DocumentMailController
         ]);
     }
 
+    public function show($document)
+    {
+        $document = $this->document::findOrFail($document);
+
+        return view(config('documents.web.views.show'))->with([
+            'document' => $document
+        ]);
+    }
+
     /**
      * Kullanıcı bir dosya indirmek veya e-posta adresini girmek için görünen sayfa.
      * @param Request $request
