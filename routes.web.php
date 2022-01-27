@@ -25,6 +25,7 @@ Route::group([
 ], function () {
     Route::get(config('documents.routes.web.index'), 'DocumentMailController@index')->name('index');
     Route::get(config('documents.routes.web.create'), 'DocumentMailController@create')->name('create');
+    Route::get(config('documents.routes.web.show'), 'DocumentMailController@show')->name('show');
     Route::post(config('documents.routes.web.store'), 'DocumentMailController@store')->name('store');
     Route::get(config('documents.routes.web.download'), 'DocumentMailController@download')->name('download');
 });

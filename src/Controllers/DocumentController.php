@@ -2,7 +2,9 @@
 
 namespace Digitalcake\Documents\Controllers;
 
+use ErrorException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class DocumentController
@@ -27,7 +29,7 @@ class DocumentController
             'documents' => $this->model::all()
         ]);
     }
-    
+
     /**
      * administrator/documents/show/{document} sayfasının yönlendirilmesi
      * @param $documents
@@ -47,7 +49,7 @@ class DocumentController
     public function create()
     {
         return view(config('documents.admin.views.create'))->with([
-            'store_route' => route(config('documents.routes.admin.name'). 'store'),
+            'store_route' => route(config('documents.routes.admin.name') . 'store'),
         ]);
     }
 
@@ -58,10 +60,7 @@ class DocumentController
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'nullable',
-            'documents' => 'required',
-        ]);
+        $request->validate(config('documents.validation.store'));
 
         $model = new $this->model;
 
@@ -110,20 +109,24 @@ class DocumentController
         if ($request->name) {
             $name = Str::slug($request->name);
         }
-        
-        if($file) {
-            unlink(public_path(config('documents.path') . '/' . $document->name));
+
+        if ($file) {
+            try {
+                unlink(public_path(config('documents.path') . '/' . $document->name));
+            } catch (ErrorException $e) {
+                Log::alert($e->getMessage());
+            }
             $name = $request->name ? $name : Str::of($file->getClientOriginalName())->replace('.' . $file->getClientOriginalExtension(), '');
-            $document->path = $file->move(config('documents.path'), $name . '.'. $file->getClientOriginalExtension());
+            $document->path = $file->move(config('documents.path'), $name . '.' . $file->getClientOriginalExtension());
         }
-        
+
         $document->name = $name;
         $document->public = $request->is_public == 1 ? true : false;
         $document->save();
 
         return back()->with([
             'message' => trans('documents::admin.upload_success'),
-        ]);   
+        ]);
     }
 
     /**
@@ -134,12 +137,15 @@ class DocumentController
     public function destroy($document)
     {
         $document = $this->model::findOrFail($document);
-        unlink(public_path(config('documents.path') . '/' . $document->name));
+        try {
+            unlink(public_path(config('documents.path') . '/' . $document->name));
+        } catch (ErrorException $e) {
+            Log::alert($e->getMessage());
+        }
         $document->delete();
 
         return back()->with([
             'message' => trans('documents::admin.delete_success'),
         ]);
-
     }
 }

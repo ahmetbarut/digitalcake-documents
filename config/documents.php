@@ -26,6 +26,7 @@ return [
             'create' => 'documents::add_email',
             'download' => null, //'Documents.Views.download',
             'index' => 'package.documents.web.index',
+            'show' => 'package.documents.web.show',
         ]
     ],
 
@@ -52,6 +53,7 @@ return [
             'name' => 'documents.',
             'create' => 'create/{document}',
             'store' => 'store/{document}',
+            'show' => 'show/{document}',
             'download' => 'download/{documents}',
         ],
     ],
@@ -64,5 +66,23 @@ return [
     // e-posta da gönderilecek şablon
     'mail' => [
         'template' => 'documents::mail',
+    ],
+
+    'documents_table_fileds' => [
+        'name',
+        'path',
+        'slug',
+        'description',
+        'image',
+        'public',
+    ],
+    'validation' => [
+        'store' => [
+            'name' => 'required|max:255',
+            'path' => 'required|max:255',
+            'description' => 'required|max:255',
+            'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'public' => null,
+        ]
     ],
 ];
