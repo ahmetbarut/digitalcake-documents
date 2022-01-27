@@ -60,7 +60,14 @@ class DocumentController
      */
     public function store(Request $request)
     {
-        $request->validate(config('documents.validation.store'));
+        $request->validate(
+            [
+                'name' => 'required|max:255',
+                'description' => 'required|max:255',
+                'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'public' => 'required|boolean',
+            ]
+        );
 
         $model = new $this->model;
 
@@ -71,6 +78,7 @@ class DocumentController
         $model->path = $file->move(config('documents.path'), $name);
         $model->name = $name;
         $model->slug = Str::uuid();
+        $model->description = $request->description;
         $model->public = $request->is_public == 1 ? true : false;
         $model->save();
 
