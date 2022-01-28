@@ -76,8 +76,8 @@ class DocumentController
 
         Image::make($request->file('image')->getRealPath())->resize(200, 200, function ($constraint) {
             $constraint->aspectRatio();
-        })->save(config('documents.img_path'). '/' . $image, 95);
-        
+        })->save(config('documents.img_path') . '/' . $image, 95);
+
         $file = $request->file('documents');
 
         $name = $request->name ? Str::slug($request->name) . '.' . $file->getClientOriginalExtension() : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
@@ -139,10 +139,10 @@ class DocumentController
 
         if ($request->has('image')) {
             $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
-            
+
             Image::make($request->file('image')->getRealPath())->resize(200, 200, function ($constraint) {
                 $constraint->aspectRatio();
-            })->save(config('documents.img_path'). '/' . $image, 95);
+            })->save(config('documents.img_path') . '/' . $image, 95);
         }
 
         $document->image = $request->has('image') ? $image : $document->image;

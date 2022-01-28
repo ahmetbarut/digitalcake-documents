@@ -23,6 +23,13 @@ class DocumentMailController
         $this->mailModel = config('documents.mail_model');
     }
 
+    public function emailList()
+    {
+        return view(config('documents.admin.views.email_list'))->with([
+            'emails' => $this->mailModel::latest()->get()
+        ]);
+    }
+    
     /**
      * Dokümanların listelendiği sayfayı döndürür.
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

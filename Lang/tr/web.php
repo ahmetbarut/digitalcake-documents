@@ -1,6 +1,7 @@
 <?php 
 
 return [
+    'page_title' => "Belgeler",
     'contract' => 'Bu dosyayı sana ulaştırabilmemiz için mail adresini girmeniz ve gizlilik sözleşmesini kabul etmeniz gerekiyor.',
     'download' => 'İndir',
     'product_catalog' => 'Hildas ürün katalogu',
@@ -8,4 +9,5 @@ return [
     'placeholder_email' => 'E-posta adresinizi giriniz',
     'alert_contract' => 'Gizlilik sözleşmesini kabul etmeniz gerekiyor.',
     'page_description_text' => 'Tüm belgelerin listesi',
+    'alert_contract' => 'Gizlilik sözleşmesini kabul etmeniz gerekiyor.',
 ];
