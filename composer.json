@@ -28,5 +28,7 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "require": {}
+    "require": {
+        "intervention/image": "^2.0"
+    }
 }

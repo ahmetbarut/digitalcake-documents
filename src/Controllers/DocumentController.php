@@ -6,6 +6,7 @@ use ErrorException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class DocumentController
 {
@@ -72,7 +73,11 @@ class DocumentController
 
         $model = new $this->model;
         $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
-        $request->file('image')->move(public_path(config('documents.img_path')), $image);
+
+        Image::make($request->file('image')->getRealPath())->resize(200, 200, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save(config('documents.img_path'). '/' . $image, 95);
+        
         $file = $request->file('documents');
 
         $name = $request->name ? Str::slug($request->name) . '.' . $file->getClientOriginalExtension() : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
@@ -134,7 +139,10 @@ class DocumentController
 
         if ($request->has('image')) {
             $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path(config('documents.img_path')), $image);
+            
+            Image::make($request->file('image')->getRealPath())->resize(200, 200, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save(config('documents.img_path'). '/' . $image, 95);
         }
 
         $document->image = $request->has('image') ? $image : $document->image;
