@@ -12,4 +12,9 @@ class DocumentsMail extends Model
     protected $fillable = [
         'email', 'document_id',
     ];
+
+    public function document()
+    {
+        return $this->belongsTo(Documents::class);
+    }
 }
