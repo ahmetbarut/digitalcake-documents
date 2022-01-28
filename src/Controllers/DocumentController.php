@@ -72,7 +72,7 @@ class DocumentController
 
         $model = new $this->model;
         $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
-        $request->file('image')->move(public_path(config('documents.storage.img_path')), $image);
+        $request->file('image')->move(public_path(config('documents.img_path')), $image);
         $file = $request->file('documents');
 
         $name = $request->name ? Str::slug($request->name) . '.' . $file->getClientOriginalExtension() : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
@@ -134,7 +134,7 @@ class DocumentController
 
         if ($request->has('image')) {
             $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path(config('documents.storage.img_path')), $image);
+            $request->file('image')->move(public_path(config('documents.img_path')), $image);
         }
 
         $document->image = $request->has('image') ? $image : $document->image;
