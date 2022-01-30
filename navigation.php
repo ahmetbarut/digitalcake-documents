@@ -13,6 +13,9 @@ return [
             [
                 'title' => trans('documents::admin.add_new_document'), 'url' => 'administrator/documents/create', 'active' => \Request::is('administrator/documents/create')
             ],
+            [
+                'title' => trans('documents::admin.emails'), 'url' => 'administrator/documents/emails', 'active' => \Request::is('administrator/documents/emails')
+            ],
         ]
     ]
 ];

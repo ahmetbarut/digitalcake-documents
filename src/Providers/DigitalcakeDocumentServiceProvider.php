@@ -26,20 +26,18 @@ class DigitalcakeDocumentServiceProvider extends ServiceProvider
 
         if (is_dir(app_path('Extensions')) && !is_dir(app_path('Extensions/Documents'))) {
             mkdir(app_path('Extensions/Documents'));
-            copy(__DIR__ . '/../../navigation.php', app_path('Extensions/Documents/navigation.php'));
 
             $this->publishes([
                 __DIR__ . '/../../routes.web.php' => app_path('Extensions/Documents/routes.web.php'),
+                __DIR__ . '/../../navigation.php', app_path('Extensions/Documents/navigation.php'),
             ], 'documents');
         }
 
         if (is_dir(app_path('Extensions/Documents'))) {
             $this->publishes([
                 __DIR__ . '/../../routes.web.php' => app_path('Extensions/Documents/routes.web.php'),
-            ], 'documents');
-
-            $this->publishes([
                 __DIR__ . '/../../Lang' => app_path('Extensions/Documents/Lang'),
+
             ], 'documents');
         } else {
             $this->loadRoutesFrom(__DIR__ . '/../../routes.web.php');

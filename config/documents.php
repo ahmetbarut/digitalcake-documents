@@ -8,7 +8,9 @@ return [
     'mail_model' => Digitalcake\Documents\Models\DocumentsMail::class,
 
     // Belgelerin yükleneceği dizin
-    'path' => 'uploads/documents',
+    'path' => 'upload/documents/files',
+
+    'img_path' => 'upload/documents/images',
 
     // admin tarafındaki sayfalarin şablonu
     'admin' => [
@@ -17,6 +19,7 @@ return [
             'create' => 'package.documents.admin.add',
             'show' => 'documents::show',
             'edit' => 'package.documents.admin.edit',
+            'email_list' => 'package.documents.admin.emails',
         ],
     ],
 
@@ -46,6 +49,7 @@ return [
             'edit' => 'edit/{documents}',
             'update' => 'update/{documents}',
             'destroy' => 'destroy/{documents}',
+            'emails' => 'emails',
         ],
         'web' => [
             'prefix' => 'documents',
@@ -68,21 +72,12 @@ return [
         'template' => 'documents::mail',
     ],
 
-    'documents_table_fileds' => [
-        'name',
-        'path',
-        'slug',
-        'description',
-        'image',
-        'public',
-    ],
-    'validation' => [
-        'store' => [
-            'name' => 'required|max:255',
-            'path' => 'required|max:255',
-            'description' => 'required|max:255',
-            'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'public' => null,
-        ]
-    ],
+    // 'documents_table_fileds' => [
+    //     'name',
+    //     'path',
+    //     'slug',
+    //     'description',
+    //     'image',
+    //     'public',
+    // ]
 ];
