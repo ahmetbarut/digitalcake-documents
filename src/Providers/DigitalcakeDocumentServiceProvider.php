@@ -2,6 +2,7 @@
 
 namespace Digitalcake\Documents\Providers;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 
 class DigitalcakeDocumentServiceProvider extends ServiceProvider
@@ -11,7 +12,7 @@ class DigitalcakeDocumentServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function boot()
     {
         $this->publishes([
             __DIR__ . '/../../config/documents.php' => config_path('documents.php'),
@@ -36,6 +37,8 @@ class DigitalcakeDocumentServiceProvider extends ServiceProvider
             __DIR__ . '/../../navigation.php', app_path('Extensions/Documents/navigation.php'),
             __DIR__ . '/../../Lang' => app_path('Extensions/Documents/Lang'),
         ], 'documents');
+
+        Artisan::call('optimize:clear');
     }
 
     /**
@@ -43,7 +46,7 @@ class DigitalcakeDocumentServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function register()
     {
     }
 }
