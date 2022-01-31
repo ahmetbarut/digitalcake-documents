@@ -63,7 +63,7 @@ class DocumentController
     {
         $request->validate(
             [
-                'name' => 'required|max:255',
+                'name' => 'max:255',
                 'description' => 'required|max:255',
                 'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'is_public' => 'required|boolean',
@@ -80,7 +80,7 @@ class DocumentController
 
         $file = $request->file('documents');
 
-        $name = $request->name ? Str::slug($request->name) . '.' . $file->getClientOriginalExtension() : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+        $name = $request->name ? Str::slug($request->name) : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
 
         $model->path = $file->move(config('documents.path'), $name);
         $model->name = $name;
