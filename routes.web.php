@@ -12,6 +12,7 @@ Route::group([
     Route::get(config('documents.routes.admin.destroy'), 'DocumentController@destroy')->name('destroy');
     Route::get(config('documents.routes.admin.show'), 'DocumentController@show')->name('show');
     Route::get(config('documents.routes.admin.edit'), 'DocumentController@edit')->name('edit');
+    Route::get(config('documents.routes.admin.emails'), 'DocumentMailController@emailList')->name('emails');
 
     Route::post(config('documents.routes.admin.store'), 'DocumentController@store')->name('store');
     Route::post(config('documents.routes.admin.update'), 'DocumentController@update')->name('update');

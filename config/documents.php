@@ -70,14 +70,6 @@ return [
     // e-posta da gönderilecek şablon
     'mail' => [
         'template' => 'documents::mail',
+        'subject' => 'Download nu onze allergenencatalogus',
     ],
-
-    // 'documents_table_fileds' => [
-    //     'name',
-    //     'path',
-    //     'slug',
-    //     'description',
-    //     'image',
-    //     'public',
-    // ]
 ];
