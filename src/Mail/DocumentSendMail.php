@@ -32,7 +32,7 @@ class DocumentSendMail extends Mailable
      */
     public function build()
     {
-        $this->subject(config('documents.mail.subject'));
+        $this->subject(trans('documents::mail.title') ?? config('documents.mail.subject'));
         return $this->view(config('documents.mail.template'));
     }
 }

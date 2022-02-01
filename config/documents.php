@@ -71,5 +71,6 @@ return [
     'mail' => [
         'template' => 'documents::mail',
         'subject' => 'Download nu onze allergenencatalogus',
+        'mailable' => null,
     ],
 ];
