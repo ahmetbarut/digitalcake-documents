@@ -74,18 +74,20 @@ class DocumentController
         $model = new $this->model;
         $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
 
-        Image::make($request->file('image')->getRealPath())->resize(200, 200, function ($constraint) {
+
+        Image::make($request->file('image')->getRealPath())->resize(800, 800, function ($constraint) {
             $constraint->aspectRatio();
         })->save(config('documents.img_path') . '/' . $image, 95);
 
         $file = $request->file('documents');
 
         $name = $request->name ? $request->name : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+        $slug = Str::uuid() . '.' . $file->getClientOriginalExtension();
 
-        $model->path = $file->move(config('documents.path'), $name);
+        $model->path = $file->move(config('documents.path'), $slug);
         $model->name = $name;
         $model->image = $image;
-        $model->slug = Str::uuid();
+        $model->slug = $slug;
         $model->description = $request->description;
         $model->public = $request->is_public == 1 ? true : false;
         $model->save();
@@ -127,20 +129,25 @@ class DocumentController
         }
 
         if ($file) {
+            $slug = Str::uuid() . '.' . $file->getClientOriginalExtension();
+
             try {
-                unlink(public_path(config('documents.path') . '/' . $document->name));
-                unlink(public_path(config('documents.img_path') . '/' . $document->image));
+                unlink(public_path($document->path));
             } catch (ErrorException $e) {
                 Log::alert($e->getMessage());
             }
             $name = $request->name ? $name : Str::of($file->getClientOriginalName())->replace('.' . $file->getClientOriginalExtension(), '');
-            $document->path = $file->move(config('documents.path'), $name . '.' . $file->getClientOriginalExtension());
+            $document->path = $file->move(config('documents.path'), $slug);
         }
 
         if ($request->has('image')) {
+            try{
+                unlink(public_path(config('documents.img_path') . '/' . $document->image));
+            }catch (ErrorException $e){
+                Log::alert($e->getMessage());
+            }
             $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
-
-            Image::make($request->file('image')->getRealPath())->resize(200, 200, function ($constraint) {
+            Image::make($request->file('image')->getRealPath())->resize(800, 800, function ($constraint) {
                 $constraint->aspectRatio();
             })->save(config('documents.img_path') . '/' . $image, 95);
         }
@@ -165,7 +172,7 @@ class DocumentController
     {
         $document = $this->model::findOrFail($document);
         try {
-            unlink(public_path(config('documents.path') . '/' . $document->name));
+            unlink(public_path($document->path));
             unlink(public_path(config('documents.img_path') . '/' . $document->image));
         } catch (ErrorException $e) {
             Log::alert($e->getMessage());
