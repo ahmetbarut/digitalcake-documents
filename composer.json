@@ -29,6 +29,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "intervention/image": "^2.0"
+        "php": "^7.2 || ^8.0"
     }
 }
