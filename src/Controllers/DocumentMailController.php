@@ -10,12 +10,12 @@ class DocumentMailController
     /**
      * @var \Digitalcake\Documents\Models\Documents
      */
-    private $document;
+    protected $document;
     
     /**
      * @var \Digitalcake\Documents\Models\DocumentsMail
      */
-    private $mailModel;
+    protected $mailModel;
 
     public function __construct()
     {

@@ -13,7 +13,7 @@ class DocumentController
     /**
      * config/documents.php dosyasından tanımlanan modeli alır. 
      */
-    private $model;
+    protected $model;
 
     public function __construct()
     {
