@@ -80,7 +80,7 @@ class DocumentController
 
         $file = $request->file('documents');
 
-        $name = $request->name ? Str::slug($request->name) : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+        $name = $request->name ? $request->name : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
 
         $model->path = $file->move(config('documents.path'), $name);
         $model->name = $name;
