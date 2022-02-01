@@ -123,7 +123,7 @@ class DocumentController
         $name = $document->name;
 
         if ($request->name) {
-            $name = Str::slug($request->name);
+            $name = $request->name;
         }
 
         if ($file) {
