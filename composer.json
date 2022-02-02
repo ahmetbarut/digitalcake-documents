@@ -1,5 +1,5 @@
 {
-    "name": "digitalcake/documents",
+    "name": "digitalcake/documents-local",
     "description": "Belge yönetimi",
     "type": "package",
     "license": "MIT",
@@ -22,9 +22,6 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": [
-            "@php artisan vendor:publish --provider=\"Digitalcake\\Documents\\Providers\\DigitalcakeDocumentServiceProvider\" --tag=config"
-        ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
