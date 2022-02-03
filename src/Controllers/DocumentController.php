@@ -2,9 +2,12 @@
 
 namespace Digitalcake\Documents\Controllers;
 
+use App\Models\Locale;
 use ErrorException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
@@ -18,6 +21,7 @@ class DocumentController
     public function __construct()
     {
         $this->model = config('documents.model');
+        View::share('locales', Locale::all());
     }
 
     /**
@@ -61,15 +65,27 @@ class DocumentController
      */
     public function store(Request $request)
     {
-        $request->validate(
-            [
-                'name' => 'max:255',
-                'description' => 'required|max:255',
-                'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'is_public' => 'required|boolean',
-                'documents' => 'required'
-            ]
-        );
+        $locales = Locale::find($request->locales);
+        if (!$locales) {
+            return redirect()->back()->withErrors(['locales' => 'Lütfen dilleri seçiniz.']);
+        }
+
+        $request->validate([
+            'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_public' => 'required|boolean',
+            'documents' => 'required'
+        ]);
+
+        foreach ($locales as $locale) {
+            $rules['name-' . $locale->language] = ['max:255'];
+            $rules['description-' . $locale->language] = ['required', 'max:255'];
+        }
+
+        $validation = Validator::make($request->all(), $rules);
+
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation->errors())->withInput();
+        }
 
         $model = new $this->model;
         $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
@@ -81,14 +97,22 @@ class DocumentController
 
         $file = $request->file('documents');
 
-        $name = $request->name ? $request->name : Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+        $name = Str::of(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))->title()->replace('_', ' ')->replace('-', ' ');
         $slug = Str::uuid() . '.' . $file->getClientOriginalExtension();
 
+        foreach ($locales as $locale) {
+            app()->setLocale($locale->language);
+            if ($request->get('name-' . $locale->language) === null) {
+                $model->name = $name;
+            } else {
+                $model->name = $request->get('name-' . $locale->language);
+            }
+            $model->description = $request->get('description-' . $locale->language);
+        }
+
         $model->path = $file->move(config('documents.path'), $slug);
-        $model->name = $name;
         $model->image = $image;
         $model->slug = $slug;
-        $model->description = $request->description;
         $model->public = $request->is_public == 1 ? true : false;
         $model->save();
 
@@ -120,6 +144,28 @@ class DocumentController
     {
         $document = $this->model::findOrFail($document);
 
+
+        $locales = Locale::find($request->locales);
+
+        if (!$locales) {
+            return redirect()->back()->withErrors(['locales' => 'Lütfen dilleri seçiniz.']);
+        }
+
+        $request->validate([
+            'is_public' => 'required|boolean',
+        ]);
+
+        foreach ($locales as $locale) {
+            $rules['name-' . $locale->language] = ['max:255'];
+            $rules['description-' . $locale->language] = ['required', 'max:255'];
+        }
+
+        $validation = Validator::make($request->all(), $rules);
+
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation->errors())->withInput();
+        }
+
         $file = $request->file('documents');
 
         $name = $document->name;
@@ -138,23 +184,32 @@ class DocumentController
             }
             $name = $request->name ? $name : Str::of($file->getClientOriginalName())->replace('.' . $file->getClientOriginalExtension(), '');
             $document->path = $file->move(config('documents.path'), $slug);
+            $document->slug = $slug;
         }
 
         if ($request->has('image')) {
-            try{
+            try {
                 unlink(public_path(config('documents.img_path') . '/' . $document->image));
-            }catch (ErrorException $e){
+            } catch (ErrorException $e) {
                 Log::alert($e->getMessage());
             }
             $image = Str::random(32) . '.' . $request->file('image')->getClientOriginalExtension();
             Image::make($request->file('image')->getRealPath())->resize(800, 800, function ($constraint) {
                 $constraint->aspectRatio();
             })->save(config('documents.img_path') . '/' . $image, 95);
+            $document->image = $image;
         }
 
-        $document->image = $request->has('image') ? $image : $document->image;
-        $document->description = $request->description;
-        $document->name = $name;
+        foreach ($locales as $locale) {
+            app()->setLocale($locale->language);
+            if ($request->get('name-' . $locale->language) === null) {
+                $document->name = $name;
+            } else {
+                $document->name = $request->get('name-' . $locale->language);
+            }
+            $document->description = $request->get('description-' . $locale->language);
+        }
+
         $document->public = $request->is_public == 1 ? true : false;
         $document->save();
 
@@ -177,6 +232,7 @@ class DocumentController
         } catch (ErrorException $e) {
             Log::alert($e->getMessage());
         }
+        $document->deleteTranslations();
         $document->delete();
 
         return back()->with([

@@ -6,9 +6,9 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Documents extends Model
+class DocumentsTranslation extends Model
 {
-    use HasFactory, Translatable;
+    use HasFactory;
 
-    protected $translatedAttributes = ['description', 'name'];
+    protected $table = 'document_translations';
 }
